@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿using avit_essentials_common.IRPorts;
+using Crestron.SimplSharpPro;
 using PepperDash.Essentials.Core;
 using PepperDash.Essentials.Core.Config;
 using System;

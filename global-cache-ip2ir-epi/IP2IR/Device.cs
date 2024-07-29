@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharp;
+﻿using avit_essentials_common.IRPorts;
+using Crestron.SimplSharp;
 using Crestron.SimplSharpPro;
 using global_cache_ip2ir_epi.IRPortController;
 using Newtonsoft.Json;
@@ -53,9 +54,9 @@ namespace global_cache_ip2ir_epi
         }
     }
     public class Device : EssentialsDevice,
-        IOnline, ICommunicationMonitor, IDisposable, IQueue<string>, // IQueue is a way to get the cmmands into the epi without having a defined interface
-        //IHasPowerControl, IChannel, IColor, IDPad, ISetTopBoxNumericKeypad, ITransport, //, ISetTopBoxControls
-        IIROutputPortsAdvanced
+        IOnline, ICommunicationMonitor, IDisposable, IIROutputPortsAdvanced, IQueue<string> // IQueue is a way to get the cmmands into the epi without having a defined interface
+        //, IHasPowerControl, IChannel, IColor, IDPad, ISetTopBoxNumericKeypad, ITransport //, ISetTopBoxControls
+        
     {
         #region variables
         public uint LogLevel { get; set; }

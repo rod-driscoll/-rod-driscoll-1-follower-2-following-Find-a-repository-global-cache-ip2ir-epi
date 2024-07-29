@@ -8,7 +8,7 @@ using PepperDash.Essentials.Core.Presets;
 using PepperDash.Essentials.Core.Routing;
 using PepperDash.Essentials.Core.DeviceTypeInterfaces;
 using PepperDash.Essentials.Devices.Common;
-using global_cache_ip2ir_epi.IRPortController;
+using avit_essentials_common.IRPorts;
 
 namespace global_cache_ip2ir_epi.IRSetTopBox
 {

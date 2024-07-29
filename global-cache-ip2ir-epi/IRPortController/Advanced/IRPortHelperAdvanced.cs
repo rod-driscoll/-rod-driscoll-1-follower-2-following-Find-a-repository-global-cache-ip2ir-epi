@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using avit_essentials_common.IRPorts;
 using Crestron.SimplSharpPro;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

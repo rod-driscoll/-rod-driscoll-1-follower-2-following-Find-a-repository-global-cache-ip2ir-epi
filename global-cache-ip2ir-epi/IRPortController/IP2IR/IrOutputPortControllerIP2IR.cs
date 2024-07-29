@@ -1,4 +1,4 @@
-﻿using global_cache_ip2ir_epi.IRPortController;
+﻿using avit_essentials_common.IRPorts;
 using Newtonsoft.Json.Linq;
 using PepperDash.Core;
 using PepperDash.Essentials.Core.Config;
@@ -14,7 +14,7 @@ namespace PepperDash.Essentials.Core
     {
         uint IrPortUid;
         public IIROutputPort IrPort { get; private set; }
-
+        
         public BoolFeedback DriverLoaded { get; private set; }
 
         public ushort StandardIrPulseTime { get; set; }

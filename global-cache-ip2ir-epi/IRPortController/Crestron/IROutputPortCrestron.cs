@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿using avit_essentials_common.IRPorts;
+using Crestron.SimplSharpPro;
 using Crestron.SimplSharpProInternal;
 using System.Text;
 

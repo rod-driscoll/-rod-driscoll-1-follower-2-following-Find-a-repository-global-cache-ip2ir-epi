@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿using avit_essentials_common.IRPorts;
+using Crestron.SimplSharpPro;
 using System.Collections.Generic;
 
 namespace global_cache_ip2ir_epi.IRPortController
