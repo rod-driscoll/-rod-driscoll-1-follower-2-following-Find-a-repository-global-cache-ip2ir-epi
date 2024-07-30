@@ -1,15 +1,14 @@
-﻿using Crestron.SimplSharpPro;
+﻿using avit_essentials_common.IRPorts;
+using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Newtonsoft.Json;
 using PepperDash.Core;
 using PepperDash.Essentials.Core;
 using PepperDash.Essentials.Core.Bridges;
+using PepperDash.Essentials.Core.DeviceTypeInterfaces;
 using PepperDash.Essentials.Core.Presets;
 using PepperDash.Essentials.Core.Routing;
-using PepperDash.Essentials.Core.DeviceTypeInterfaces;
 using PepperDash.Essentials.Devices.Common;
-using avit_essentials_common.IRPorts;
-using System;
 
 namespace global_cache_ip2ir_epi.IRSetTopBox
 {

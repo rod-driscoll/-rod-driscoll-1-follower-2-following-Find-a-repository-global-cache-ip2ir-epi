@@ -66,11 +66,9 @@ namespace PepperDash.Essentials.Core
                 if(!filePath.Contains("\\"))
                     filePath = Global.FilePathPrefix + "ir" + Global.DirectorySeparator + filePath;
                 
-                Debug.Console(1, "*************Attempting to load IR file: {0}***************", filePath);
-
+                //Debug.Console(2, "*************Attempting to load IR file: {0}***************", filePath);
                 LoadDriver(filePath);
-
-                PrintAvailableCommands();
+                //PrintAvailableCommands();
             });
             Debug.Console(1, this, "{0} IrOutputPortControllerIP2IR constructor done", key);
         }

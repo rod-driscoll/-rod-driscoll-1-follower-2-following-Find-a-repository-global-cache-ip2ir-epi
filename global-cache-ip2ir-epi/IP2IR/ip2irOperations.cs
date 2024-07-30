@@ -64,7 +64,7 @@ namespace global_cache_ip2ir_epi
         {
             if (!String.IsNullOrEmpty(cmd.IP2IRString))
             {
-                Debug.Console(1, "ip2ir GetIP2IRString({0}:{1})", port, cmd.IP2IRString);
+                //Debug.Console(2, "ip2ir GetIP2IRString({0}:{1})", port, cmd.IP2IRString);
                 if(repeat == 0)
                     return cmd.IP2IRString.Replace("sendir,1:1,", String.Format("sendir,1:{0},", port));
                 else
@@ -91,7 +91,7 @@ namespace global_cache_ip2ir_epi
             freq = (UInt16)(Math.Round((decimal)freq / 1000, 0) * 1000); // round it
             UInt16 preamble = System.UInt16.Parse(m1[2].Value, System.Globalization.NumberStyles.HexNumber);
             preamble = (UInt16)(preamble * 2 + 1);
-            Debug.Console(1, "ip2ir sendir,1:{0},{1},{2},{3},1", port, repeat, freq, preamble);
+            //Debug.Console(2, "ip2ir sendir,1:{0},{1},{2},{3},1", port, repeat, freq, preamble);
             return String.Format("sendir,1:{0},{1},{2},{3},1{4}\x0D", port, repeat, freq, preamble, sb);
         }
         public static IP2IRCommand GetDataFromDict(Dictionary<string, IP2IRCommand> data, string functionName) // Todo: make this a lot better
@@ -105,16 +105,16 @@ namespace global_cache_ip2ir_epi
         {
             try
             {
-                Debug.Console(1, "ip2ir GetValidKeyFromDict({0})", functionName);
+                //Debug.Console(2, "ip2ir GetValidKeyFromDict({0})", functionName);
                 if (data.ContainsKey(functionName))
                 {
-                    Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", functionName);
+                    Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", functionName);
                     return functionName;
                 }
                 string key = functionName.ToUpper();
                 if (data.ContainsKey(key))
                 {
-                    Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", key);
+                    Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", key);
                     return key;
                 }
                 if (key == "ENTER" || key == "OK" || key == "SELECT")
@@ -123,7 +123,7 @@ namespace global_cache_ip2ir_epi
                     string result_ = keys_.Find(x => data.ContainsKey(x));
                     if (!String.IsNullOrEmpty(result_))
                     {
-                        Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                        Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                         return result_;
                     }
                 }
@@ -139,7 +139,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -155,7 +155,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -174,7 +174,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -193,7 +193,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -209,7 +209,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -225,7 +225,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -241,7 +241,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }
@@ -257,7 +257,7 @@ namespace global_cache_ip2ir_epi
                         string result_ = keys_.Find(x => data.ContainsKey(x));
                         if (!String.IsNullOrEmpty(result_))
                         {
-                            Debug.Console(1, "ip2ir GetValidKeyFromDict return: {0}", result_);
+                            Debug.Console(2, "ip2ir GetValidKeyFromDict return: {0}", result_);
                             return result_;
                         }
                     }

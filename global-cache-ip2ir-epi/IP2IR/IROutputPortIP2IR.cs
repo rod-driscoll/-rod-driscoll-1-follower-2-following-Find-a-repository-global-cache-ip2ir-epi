@@ -33,7 +33,7 @@ namespace global_cache_ip2ir_epi
         }
         public uint LoadIRDriver(string IRFileName)
         {
-            // "\\NVRAM\\Digitel Terestrial Set Top Box.ccf";
+            // e.g. "\\html\\presets\\lists\\Digitel Terestrial Set Top Box.ccf";
             Debug.Console(1, "{0} LoadIRDriver file: {1}", ClassName, IRFileName);
             try
             {
@@ -52,7 +52,7 @@ namespace global_cache_ip2ir_epi
                 else // in dict, overwrite
                     index_ = first_.Key;
 
-                Debug.Console(1, "{0} LoadIRDriver IRDriverID: {1}", ClassName, index_);
+                //Debug.Console(2, "{0} LoadIRDriver IRDriverID: {1}", ClassName, index_);
                 var dict_ = IP2IROperations.ReadIrFile(IRFileName);
                 var driver_ = new IP2IRDriver(index_, IRFileName, dict_);
                 if (IRDrivers.ContainsKey(index_))
@@ -113,7 +113,7 @@ namespace global_cache_ip2ir_epi
             {
                 //Debug.Console(2, "{0} IRDrivers.ContainsKey({1})", ClassName, IRDriverID);
                 string str_ = IP2IROperations.GetValidKeyFromDict(IRDrivers[(int)IRDriverID].Driver, IRCommand);
-                Debug.Console(2, "{0} GetStandardCmdFromIRCmd ContainsKey({1}:{2}) {3}", ClassName, IRDriverID, IRCommand, str_);
+                //Debug.Console(2, "{0} GetStandardCmdFromIRCmd ContainsKey({1}:{2}) {3}", ClassName, IRDriverID, IRCommand, str_);
                 return str_;
             }
             return String.Empty;
@@ -136,7 +136,7 @@ namespace global_cache_ip2ir_epi
         public bool IsIRCommandAvailable(uint IRDriverID, string IRCmdName)
         {
             string str_ = GetStandardCmdFromIRCmd(IRDriverID, IRCmdName);
-            Debug.Console(2, "{0} IsIRCommandAvailable({1}:{2}) {3}", ClassName, IRDriverID, IRCmdName, str_);
+            //Debug.Console(2, "{0} IsIRCommandAvailable({1}:{2}) {3}", ClassName, IRDriverID, IRCmdName, str_);
             return !String.IsNullOrEmpty(str_);
         }
         private bool Send(Dictionary<string, IP2IRCommand> driver, string cmd)

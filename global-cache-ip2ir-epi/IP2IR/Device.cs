@@ -195,11 +195,11 @@ namespace global_cache_ip2ir_epi
 
         private void ProcessResponse(string response)
         {
-            Debug.Console(1, this, "ParseRx: {0}", response.Printable(false));
+            Debug.Console(2, this, "ParseRx: {0}", response.Printable(false));
             Match m = Regex.Match(response, @"ERR_(\d*):(\d+),(\d+)");
             if (m.Success)
             {
-                Debug.Console(1, this, "ERROR: {0}, {1}", m.Groups[3].Value, errorCodes[StringExtensions.Atoi(m.Groups[3].Value)]);
+                Debug.Console(1, this, "ParseRx ERROR: {0}, {1}", m.Groups[3].Value, errorCodes[StringExtensions.Atoi(m.Groups[3].Value)]);
                 // m.Groups[2].Value =
                 // ERR_0:0,002 // module does not exist
                 // ERR_1:2,010 // not an equal number of <on> and <off>
