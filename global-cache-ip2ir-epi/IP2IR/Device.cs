@@ -1,7 +1,6 @@
 ﻿using avit_essentials_common.IRPorts;
 using Crestron.SimplSharp;
 using Crestron.SimplSharpPro;
-using global_cache_ip2ir_epi.IRPortController;
 using Newtonsoft.Json;
 using PepperDash.Core;
 using PepperDash.Essentials.Core;
@@ -169,7 +168,7 @@ namespace global_cache_ip2ir_epi
         {
             _pollTimer = new CTimer(o =>
             {
-                Debug.Console(2, this, "Polling, IsOnline: {0}, Status: {1}, IsConnected: {2}, ", CommunicationMonitor.IsOnlineFeedback.BoolValue, CommunicationMonitor.Status, _coms.IsConnected);
+                //Debug.Console(2, this, "Polling, IsOnline: {0}, Status: {1}, IsConnected: {2}, ", CommunicationMonitor.IsOnlineFeedback.BoolValue, CommunicationMonitor.Status, _coms.IsConnected);
                 if (!CommunicationMonitor.IsOnlineFeedback.BoolValue)
                 {
                     CommunicationMonitor.Stop();
@@ -178,11 +177,7 @@ namespace global_cache_ip2ir_epi
                 if (!_coms.IsConnected)
                     _coms.Connect();
 
-                _commandQueue.Enqueue(new Commands.Command
-                {
-                    Coms = _coms,
-                    Message = Commands.QueryDevice
-                });
+                //_commandQueue.Enqueue(new Commands.Command { Coms = _coms, Message = Commands.QueryDevice });
 
             }, null, 5189, _pollTime);
 
@@ -214,8 +209,8 @@ namespace global_cache_ip2ir_epi
             { // completeir,1:1,<ID>
                 //busy = false;
             }
-            // stopir,1:1\x00D
-            // busyir,1:1\x00D
+            // stopir,1:1\x0D
+            // busyir,1:1\x0D
             // completeir,1:2,2445\x0D
         }
         public void SendCommand(string command)

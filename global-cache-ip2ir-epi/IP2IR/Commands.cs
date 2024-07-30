@@ -25,5 +25,6 @@ namespace global_cache_ip2ir_epi
         }
 
         public const string QueryDevice = "get_NET,0:1\rgetdevices\rgetversion\rget_IR,1:1\rget_IR,1:2\rget_IR,1:3\r";
+        //public const string QueryDevice = "get_NET,0:1\r";
     }
 }

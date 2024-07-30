@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using avit_essentials_common.IRPorts;
+﻿using avit_essentials_common.IRPorts;
 using Crestron.SimplSharpPro;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PepperDash.Core;
 using PepperDash.Essentials.Core;
 using PepperDash.Essentials.Core.Config;
+using System;
 
 namespace global_cache_ip2ir_epi.IRPortController
 {

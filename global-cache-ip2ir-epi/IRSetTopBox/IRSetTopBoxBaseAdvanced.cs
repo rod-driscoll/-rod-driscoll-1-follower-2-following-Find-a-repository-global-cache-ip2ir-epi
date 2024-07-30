@@ -9,6 +9,7 @@ using PepperDash.Essentials.Core.Routing;
 using PepperDash.Essentials.Core.DeviceTypeInterfaces;
 using PepperDash.Essentials.Devices.Common;
 using avit_essentials_common.IRPorts;
+using System;
 
 namespace global_cache_ip2ir_epi.IRSetTopBox
 {
@@ -35,9 +36,19 @@ namespace global_cache_ip2ir_epi.IRSetTopBox
             : base(key, name)
         {
             Debug.Console(1, this, "IRSetTopBoxBaseAdvanced constructor, key: {0}", key);
-            IrPort = portCont; // IrPort.Key=="stb-1-ir" IrOutputPortControllerCrestron or IrOutputPortControllerIP2IR
             IrPulseTime = (ushort)props.IrPulseTime;
-            //DeviceManager.AddDevice(portCont as Device);
+            IrPort = portCont; // IrPort.Key=="stb-1-ir" IrOutputPortControllerCrestron or IrOutputPortControllerIP2IR
+            //Debug.Console(1, this, "IRSetTopBoxBaseAdvanced IrOutputPortController {0}", portCont == null ? "== null" : portCont.GetType().Name);
+            //Debug.Console(1, this, "IRSetTopBoxBaseAdvanced IrPort DriverFilepath: {0}", IrPort.DriverFilepath);
+            //var cont_ = portCont as Device;
+            //Debug.Console(1, this, "IRSetTopBoxBaseAdvanced IrOutputPortController Device {0}", cont_ == null ? "== null" : cont_.Key);
+            //if(cont_ != null)
+            //    DeviceManager.AddDevice(cont_);
+            //Debug.Console(1, this, "IRSetTopBoxBaseAdvanced IrOutputPortControllerIP2IR {0}", ip2ir_ == null ? "== null" : ip2ir_.Key);
+            var ip2ir_ = portCont as IrOutputPortControllerIP2IR;
+            Debug.Console(1, this, "IRSetTopBoxBaseAdvanced IIrOutputPortController {0}", portCont is IIrOutputPortController ? "== null" : "exists");
+            if(ip2ir_ != null)
+                DeviceManager.AddDevice(ip2ir_);
 
             HasPresets = props.HasPresets;
             HasDvr = props.HasDvr;

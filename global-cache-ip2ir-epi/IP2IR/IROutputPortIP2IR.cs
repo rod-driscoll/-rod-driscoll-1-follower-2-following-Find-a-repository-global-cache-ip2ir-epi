@@ -8,21 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace global_cache_ip2ir_epi.IRPortController
+namespace global_cache_ip2ir_epi
 {
-    public class IrDriver
-    {
-        public string Filename { get; set; }
-        public int ID { get; set; }
-        public Dictionary<string, string> Driver { get; set; }
-        public IrDriver(int ID, string Filename, Dictionary<string, string> Driver)
-        {
-            this.ID = ID;
-            this.Filename = Filename;
-            this.Driver = Driver;
-        }
-    }
-
     public class IROutputPortIP2IR : IIROutputPort, ILogClassDetails
     {
         public string ClassName { get; private set; }
@@ -31,9 +18,9 @@ namespace global_cache_ip2ir_epi.IRPortController
         int port;
         public int IRDefaultRepeat { get; set; }
 
-        Dictionary<int, IrDriver> IRDrivers;
+        Dictionary<int, IP2IRDriver> IRDrivers;
 
-        public delegate void SendStringDelegate(string str);
+        public delegate void SendStringDelegate(string str); // this is subscribed by global_cache_ip2ir_epi.Device
         SendStringDelegate sendString;
 
         public IROutputPortIP2IR(int port, int repeat, SendStringDelegate dele)
@@ -42,7 +29,7 @@ namespace global_cache_ip2ir_epi.IRPortController
             IRDefaultRepeat = repeat;
             this.sendString = dele;
             ClassName = String.Format(ClassName + "IP2IR-port-{0}", this.port);
-            IRDrivers = new Dictionary<int, IrDriver>();
+            IRDrivers = new Dictionary<int, IP2IRDriver>();
         }
         public uint LoadIRDriver(string IRFileName)
         {
@@ -51,11 +38,23 @@ namespace global_cache_ip2ir_epi.IRPortController
             try
             {
                 var first_ = IRDrivers.FirstOrDefault(x => x.Value.Filename == IRFileName);
-                var index_ = first_.Equals(default(Dictionary<int, IrDriver>)) ? IRDriversLoadedCount + 1 : first_.Key;           
+                //var index_ = first_.Equals(default(Dictionary<int, IP2IRDriver>)) ? IRDriversLoadedCount + 1 : first_.Key;
+                var index_ = 1;
+                if(first_.Key == 0) // not in Dict
+                {
+                    foreach(var ir_ in IRDrivers)
+                    {
+                        if (!IRDrivers.ContainsKey(index_))
+                            break;
+                        index_++;
+                    }
+                }
+                else // in dict, overwrite
+                    index_ = first_.Key;
+
                 Debug.Console(1, "{0} LoadIRDriver IRDriverID: {1}", ClassName, index_);
-                Debug.Console(1, "{0} LoadIRDriver default: {1}", ClassName, first_.Key);
-                 var dict_ = ip2irOperations.ReadIrFile(IRFileName);
-               var driver_ = new IrDriver(index_, IRFileName, dict_);
+                var dict_ = IP2IROperations.ReadIrFile(IRFileName);
+                var driver_ = new IP2IRDriver(index_, IRFileName, dict_);
                 if (IRDrivers.ContainsKey(index_))
                     IRDrivers[index_] = driver_;
                 else
@@ -109,8 +108,14 @@ namespace global_cache_ip2ir_epi.IRPortController
        }
         public string GetStandardCmdFromIRCmd(uint IRDriverID, string IRCommand) // this returns a vaid loaded command
         {
+            //Debug.Console(2, "{0} GetStandardCmdFromIRCmd({1}:{2})", ClassName, IRDriverID, IRCommand);
             if (IRDrivers.ContainsKey((int)IRDriverID))
-                return ip2irOperations.GetValidKeyFromDict(IRDrivers[(int)IRDriverID].Driver, IRCommand);
+            {
+                //Debug.Console(2, "{0} IRDrivers.ContainsKey({1})", ClassName, IRDriverID);
+                string str_ = IP2IROperations.GetValidKeyFromDict(IRDrivers[(int)IRDriverID].Driver, IRCommand);
+                Debug.Console(2, "{0} GetStandardCmdFromIRCmd ContainsKey({1}:{2}) {3}", ClassName, IRDriverID, IRCommand, str_);
+                return str_;
+            }
             return String.Empty;
         }
         public string IRDriverFileNameByIRDriverId(uint IRDriverId)
@@ -122,7 +127,7 @@ namespace global_cache_ip2ir_epi.IRPortController
         public uint IRDriverIdByFileName(string IRFileName)
         {
             var first_ = IRDrivers.FirstOrDefault(x => x.Value.Filename == IRFileName);
-            return (uint)(first_.Equals(default(Dictionary<int, IrDriver>)) ? 0 : first_.Key);
+            return (uint)(first_.Equals(default(Dictionary<int, IP2IRDriver>)) ? 0 : first_.Key);
         }
         public bool IsIRCommandAvailable(string IRCmdName)
         {
@@ -130,64 +135,52 @@ namespace global_cache_ip2ir_epi.IRPortController
         }
         public bool IsIRCommandAvailable(uint IRDriverID, string IRCmdName)
         {
-            return !String.IsNullOrEmpty(GetStandardCmdFromIRCmd(IRDriverID, IRCmdName));
+            string str_ = GetStandardCmdFromIRCmd(IRDriverID, IRCmdName);
+            Debug.Console(2, "{0} IsIRCommandAvailable({1}:{2}) {3}", ClassName, IRDriverID, IRCmdName, str_);
+            return !String.IsNullOrEmpty(str_);
+        }
+        private bool Send(Dictionary<string, IP2IRCommand> driver, string cmd)
+        {
+            if (!String.IsNullOrEmpty(cmd))
+            {
+                string cmd_ = IP2IROperations.GetValidKeyFromDict(driver, cmd);
+                if (!String.IsNullOrEmpty(cmd_))
+                {
+                    //Debug.Console(2, "{0} Send({1}) found {2}", ClassName, cmd, cmd_==cmd?"":cmd_);
+                    var str_ = IP2IROperations.GetIP2IRString(driver[cmd_], port, IRDefaultRepeat);
+                    //Debug.Console(2, "{0} Send({1}) str {2}", ClassName, cmd_, str_);
+                    if (!String.IsNullOrEmpty(str_))
+                    {
+                        SendSerialData(str_);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         public void Press(string IRCmdName)
         {
             foreach (var driver in IRDrivers) // check for exact match first
             {
-                string key_ = IRCmdName;
-                if (!String.IsNullOrEmpty(key_))
+                if(driver.Value.Driver.ContainsKey(IRCmdName))
                 {
-                    string str_ = driver.Value.Driver[IRCmdName];
+                    var str_ = IP2IROperations.GetIP2IRString(driver.Value.Driver[IRCmdName], port, IRDefaultRepeat);
                     if (!String.IsNullOrEmpty(str_))
                     {
-                        Debug.Console(2, "{0} Press({1}:{2}) function exists", ClassName, key_, IRCmdName);
-                        SendSerialData(ip2irOperations.GetGlobalCaheIrString(port, str_, IRDefaultRepeat));
+                        SendSerialData(str_);
                         return;
                     }
                 }
+
             }
             foreach (var driver in IRDrivers) // check for similar matches
-            {
-                string key_ = ip2irOperations.GetValidKeyFromDict(driver.Value.Driver, IRCmdName);
-                if (!String.IsNullOrEmpty(key_))
-                {
-                    string str_ = driver.Value.Driver[IRCmdName];
-                    if (!String.IsNullOrEmpty(str_))
-                    {
-                        Debug.Console(2, "{0} Press({1}:{2}) function exists", ClassName, key_, IRCmdName);
-                        SendSerialData(ip2irOperations.GetGlobalCaheIrString(port, str_, IRDefaultRepeat));
-                        return;
-                    }
-                }
-            }
+                if (Send(driver.Value.Driver, IRCmdName)) return;
             Debug.Console(2, "{0} Press({1}:{2}) no function available", ClassName, port, IRCmdName);
         }
         public void Press(uint IRDriverID, string IRCmdName)
         {
-            try
-            {
-                if (IRDrivers.ContainsKey((int)IRDriverID))
-                {
-                    string key_ = ip2irOperations.GetValidKeyFromDict(IRDrivers[(int)IRDriverID].Driver, IRCmdName);
-                    if(!String.IsNullOrEmpty(key_))
-                    {
-                        string str_ = IRDrivers[(int)IRDriverID].Driver[IRCmdName];
-                        if (!String.IsNullOrEmpty(str_))
-                        {
-                            Debug.Console(2, "{0} Press({1}:{2}) function exists", ClassName, IRDriverID, IRCmdName);
-                            SendSerialData(ip2irOperations.GetGlobalCaheIrString(port, str_, IRDefaultRepeat));
-                        }
-                        else
-                            Debug.Console(2, "{0} Press({1}:{2}) no function available", ClassName, port, IRCmdName);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Console(2, "{0} Press({1}:{2}) ERROR: {3}", ClassName, port, IRCmdName, e.Message);
-            }
+            foreach (var driver in IRDrivers) // check for similar matches
+                if (Send(driver.Value.Driver, IRCmdName)) return;
         }
         public void PressAndRelease(string IRCmdName, ushort TimeOutInMS)
         {
@@ -211,7 +204,7 @@ namespace global_cache_ip2ir_epi.IRPortController
         {
             try
             {
-                sendString(String.Format("stopir,1,{0}", port));
+                sendString(String.Format("stopir,1:{0}", port));
             }
             catch (Exception e)
             {

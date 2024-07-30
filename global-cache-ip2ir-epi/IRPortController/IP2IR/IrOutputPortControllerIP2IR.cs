@@ -48,13 +48,13 @@ namespace PepperDash.Essentials.Core
             DeviceConfig config)
             : base(key)
         {
-            Debug.Console(1, "IrOutputPortControllerIP2IR constructor, key: {0}", key);
-            // e.g. key=="stb-1-ir"
+            Debug.Console(1, this, "IrOutputPortControllerIP2IR constructor, key: {0}", key);
+            // e.g. stb-advanced-ir
             DriverLoaded = new BoolFeedback(() => DriverIsLoaded);
             UseBridgeJoinMap = config.Properties["control"].Value<bool>("useBridgeJoinMap");
             AddPostActivationAction(() =>
             {
-                Debug.Console(1, "IrOutputPortControllerIP2IR PostActivationAction");
+                Debug.Console(1, this, "IrOutputPortControllerIP2IR PostActivationAction");
                 IrPort = postActivationFunc(config);
 
                 if (IrPort == null)
@@ -72,18 +72,19 @@ namespace PepperDash.Essentials.Core
 
                 PrintAvailableCommands();
             });
-            Debug.Console(1, "{0} IrOutputPortControllerIP2IR constructor done", key);
+            Debug.Console(1, this, "{0} IrOutputPortControllerIP2IR constructor done", key);
         }
 
         public void PrintAvailableCommands()
         {
-            Debug.Console(2, this, "Available IR Commands in IR File {0}", IrPortUid);
-            foreach (var cmd in IrPort.AvailableIRCmds())
+            var cmds_ = IrPort.AvailableIRCmds(1);
+            if(cmds_ != null)
             {
-                Debug.Console(2, this, "{0}", cmd);
+                Debug.Console(2, this, "{0} Available IR {1} File commands:", cmds_.Length, IrPortUid);
+                foreach (var cmd in cmds_)
+                    Debug.Console(2, this, cmd);
             }
         }
-
 
         /// <summary>
         /// Loads the IR driver at path
@@ -101,6 +102,7 @@ namespace PepperDash.Essentials.Core
                 DriverIsLoaded = true;
 
                 DriverLoaded.FireUpdate();
+                //Debug.Console(2, this, "***IR {0} Files loaded***", IrPort.IRDriversLoadedCount);
             }
             catch
             {

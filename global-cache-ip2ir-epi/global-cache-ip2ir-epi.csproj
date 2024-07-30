@@ -157,7 +157,9 @@
     <Compile Include="Extensions\FeedbackExt.cs" />
     <Compile Include="IP2IR\Factory.cs" />
     <Compile Include="IP2IR\ILogClassDetails.cs" />
-    <Compile Include="IP2IR\ip2irOperations.cs" />
+    <Compile Include="IP2IR\IP2IRCommand.cs" />
+    <Compile Include="IP2IR\IP2IRDriver.cs" />
+    <Compile Include="IP2IR\IP2IROperations.cs" />
     <Compile Include="IRSetTopBox\IRSetTopBoxBaseFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IP2IR\Device.cs" />
